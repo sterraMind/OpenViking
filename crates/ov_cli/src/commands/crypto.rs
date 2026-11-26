@@ -3,9 +3,9 @@
 //! This module provides commands for managing cryptographic keys,
 //! including generating and initializing root keys.
 
+use crate::config::openviking_home_dir;
 use crate::error::{Error, Result};
 use clap::Subcommand;
-use dirs::home_dir;
 use std::fs::OpenOptions;
 use std::io::Write;
 #[cfg(unix)]
@@ -105,10 +105,6 @@ async fn handle_init_key(output_file: Option<PathBuf>) -> Result<()> {
 fn get_key_path(output_file: Option<PathBuf>) -> Result<PathBuf> {
     match output_file {
         Some(path) => Ok(path),
-        None => {
-            let home = home_dir()
-                .ok_or_else(|| Error::Client("Failed to determine home directory".to_string()))?;
-            Ok(home.join(".openviking").join("master.key"))
-        }
+        None => Ok(openviking_home_dir().join("master.key")),
     }
 }

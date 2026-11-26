@@ -23,6 +23,7 @@ from openviking.crypto.exceptions import (
     AuthenticationFailedError,
     ConfigError,
 )
+from openviking_cli.utils.config.consts import DEFAULT_CONFIG_DIR
 from openviking_cli.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -601,7 +602,7 @@ class VolcengineKMSProvider(BaseProvider):
         if key_file:
             self.key_file = Path(key_file).expanduser()
         else:
-            self.key_file = Path.home() / ".openviking" / self.ROOT_KEY_FILENAME
+            self.key_file = DEFAULT_CONFIG_DIR / self.ROOT_KEY_FILENAME
         self._kms_client: Any = None
         self._root_key: Optional[bytes] = None
 
@@ -746,7 +747,7 @@ class VolcengineKMSProvider(BaseProvider):
             )
 
         # Releases before key_file was accepted ignored it and used the default path.
-        default_key_file = Path.home() / ".openviking" / self.ROOT_KEY_FILENAME
+        default_key_file = DEFAULT_CONFIG_DIR / self.ROOT_KEY_FILENAME
         if default_key_file.exists():
             raise ConfigError(
                 f"Root key file {self.key_file} does not exist, but {default_key_file} does. "

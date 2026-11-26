@@ -2,9 +2,23 @@
 # SPDX-License-Identifier: AGPL-3.0
 """Configuration constants for OpenViking."""
 
+import os
 from pathlib import Path
 
-DEFAULT_CONFIG_DIR = Path.home() / ".openviking"
+
+def _get_default_config_dir() -> Path:
+    """Get the default user config directory.
+
+    Checks OPENVIKING_HOME_DIR environment variable first.
+    Falls back to ~/.openviking if not set.
+    """
+    home_dir = os.environ.get("OPENVIKING_HOME_DIR", "")
+    if home_dir:
+        return Path(home_dir)
+    return Path.home() / ".openviking"
+
+
+DEFAULT_CONFIG_DIR = _get_default_config_dir()
 SYSTEM_CONFIG_DIR = Path("/etc/openviking")
 
 # =============================================================================
@@ -14,6 +28,7 @@ SYSTEM_CONFIG_DIR = Path("/etc/openviking")
 # Configuration file paths
 OPENVIKING_CONFIG_ENV = "OPENVIKING_CONFIG_FILE"
 OPENVIKING_CLI_CONFIG_ENV = "OPENVIKING_CLI_CONFIG_FILE"
+OPENVIKING_HOME_DIR_ENV = "OPENVIKING_HOME_DIR"
 
 # Prompt templates
 OPENVIKING_PROMPT_TEMPLATES_DIR_ENV = "OPENVIKING_PROMPT_TEMPLATES_DIR"

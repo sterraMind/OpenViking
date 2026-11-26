@@ -12,6 +12,7 @@ from typing import Any, Dict
 import httpx
 
 from openviking_cli._sdk_import import import_openviking_sdk
+from openviking_cli.utils.config.consts import DEFAULT_CONFIG_DIR
 from openviking_cli.exceptions import (
     AbortedError,
     AlreadyExistsError,
@@ -69,7 +70,7 @@ def _timeout_configured_outside_call() -> bool:
     if config_path:
         path = Path(config_path).expanduser()
     else:
-        path = Path.home() / ".openviking" / "ovcli.conf"
+        path = DEFAULT_CONFIG_DIR / "ovcli.conf"
     if not path.exists():
         return False
     try:

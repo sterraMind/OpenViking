@@ -17,6 +17,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::{Map, Value, json};
 
 use crate::CliContext;
+use crate::config::openviking_home_dir;
 use crate::error::{Error, Result};
 use crate::output::OutputFormat;
 
@@ -71,10 +72,7 @@ pub fn credentials_path() -> PathBuf {
     {
         return PathBuf::from(path);
     }
-    dirs::home_dir()
-        .unwrap_or_else(|| PathBuf::from("."))
-        .join(".openviking")
-        .join("openviking_assets_credentials.yaml")
+    openviking_home_dir().join("openviking_assets_credentials.yaml")
 }
 
 /// Load the alias -> args mapping. A missing file is an empty mapping.

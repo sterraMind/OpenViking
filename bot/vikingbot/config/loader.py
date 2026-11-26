@@ -16,6 +16,7 @@ from openviking.server.config import (
     ServerConfig,
     get_server_url_from_server_data,
 )
+from openviking_cli.utils.config.consts import DEFAULT_CONFIG_DIR
 from vikingbot.config.schema import Config
 
 CONFIG_PATH = None
@@ -42,7 +43,7 @@ def _resolve_ov_conf_path() -> Path:
         return Path(env_path).expanduser()
 
     # Default path
-    return Path.home() / ".openviking" / "ov.conf"
+    return DEFAULT_CONFIG_DIR / "ov.conf"
 
 
 def get_data_dir() -> Path:

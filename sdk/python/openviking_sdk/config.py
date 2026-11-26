@@ -12,7 +12,22 @@ from pathlib import Path
 from typing import Optional
 
 OPENVIKING_CLI_CONFIG_ENV = "OPENVIKING_CLI_CONFIG_FILE"
-DEFAULT_OVCLI_CONF = Path.home() / ".openviking" / "ovcli.conf"
+OPENVIKING_HOME_DIR_ENV = "OPENVIKING_HOME_DIR"
+
+
+def _get_default_config_dir() -> Path:
+    """Get the default user config directory.
+
+    Checks OPENVIKING_HOME_DIR environment variable first.
+    Falls back to ~/.openviking if not set.
+    """
+    home_dir = os.environ.get("OPENVIKING_HOME_DIR", "")
+    if home_dir:
+        return Path(home_dir)
+    return Path.home() / ".openviking"
+
+
+DEFAULT_OVCLI_CONF = _get_default_config_dir() / "ovcli.conf"
 
 
 @dataclass(frozen=True)

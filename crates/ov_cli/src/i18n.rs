@@ -63,6 +63,13 @@ struct CliSettings {
 }
 
 pub(crate) fn settings_path() -> Result<PathBuf> {
+    // An explicit settings file wins; an empty value is treated as unset,
+    // matching the Rust CLI's other OPENVIKING_* environment variables.
+    if let Some(path) = std::env::var_os("OPENVIKING_SETTINGS_FILE") {
+        if !path.is_empty() {
+            return Ok(PathBuf::from(path));
+        }
+    }
     let active_path = default_config_path()?;
     let config_dir = active_path
         .parent()

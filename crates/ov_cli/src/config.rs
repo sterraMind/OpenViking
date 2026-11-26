@@ -5,6 +5,7 @@ use std::path::{Path, PathBuf};
 use crate::error::{Error, Result};
 
 const OPENVIKING_CLI_CONFIG_ENV: &str = "OPENVIKING_CLI_CONFIG_FILE";
+const OPENVIKING_HOME_DIR_ENV: &str = "OPENVIKING_HOME_DIR";
 pub const DEFAULT_CUSTOM_PORT: &str = "1933";
 pub const DEFAULT_CUSTOM_URL: &str = "http://127.0.0.1:1933";
 pub const GATEWAY_TOKEN_HEADER: &str = "X-Gateway-Token";
@@ -396,10 +397,22 @@ pub fn effective_config_path() -> Result<PathBuf> {
     }
 }
 
+/// Get the OpenViking user directory, respecting OPENVIKING_HOME_DIR.
+/// Returns the path to ~/.openviking or the custom directory specified by OPENVIKING_HOME_DIR.
+pub fn openviking_home_dir() -> PathBuf {
+    // An empty value is treated as unset, matching the Rust CLI's other
+    // OPENVIKING_* environment variables.
+    match std::env::var_os(OPENVIKING_HOME_DIR_ENV) {
+        Some(path) if !path.is_empty() => PathBuf::from(path),
+        _ => dirs::home_dir()
+            .unwrap_or_else(|| PathBuf::from("."))
+            .join(".openviking"),
+    }
+}
+
 pub fn default_config_path() -> Result<PathBuf> {
-    let home = dirs::home_dir()
-        .ok_or_else(|| Error::Config("Could not determine home directory".to_string()))?;
-    Ok(home.join(".openviking").join("ovcli.conf"))
+    let home = openviking_home_dir();
+    Ok(home.join("ovcli.conf"))
 }
 
 pub fn display_config_home() -> String {

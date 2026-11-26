@@ -24,7 +24,7 @@ from openviking.server.config import (
     get_server_url_from_server_data,
 )
 from openviking_cli.utils.config.config_loader import expand_config_environment, resolve_config_path
-from openviking_cli.utils.config.consts import OPENVIKING_CONFIG_ENV
+from openviking_cli.utils.config.consts import DEFAULT_CONFIG_DIR, OPENVIKING_CONFIG_ENV
 from openviking_cli.utils.config.ovcli_config import load_ovcli_config
 from openviking_cli.utils.config.vlm_config import VLMConfig
 
@@ -643,7 +643,7 @@ def check_authentication() -> CheckResult:
 def check_disk() -> tuple[bool, str, Optional[str]]:
     """Check free disk space in the workspace directory."""
     config_path = _find_config()
-    workspace = Path.home() / ".openviking"
+    workspace = DEFAULT_CONFIG_DIR
 
     if config_path:
         data = _load_config_json(config_path)
